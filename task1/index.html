@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Виктория Немчинович Frontend-разработчица</title>
+  <meta name="description" content="Резюме и портфолио frontend-разработчицы Виктории Немчинович">
+  <!-- Пустая иконка: браузер не запрашивает /favicon.ico, и в консоли нет ошибки 404 -->
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="header">
+    <div class="header__inner">
+      <img class="avatar" src="avatar.svg" alt="Фотография Анны Соколовой" width="180" height="180">
+      <div class="header__text">
+        <h1 class="header__name">Виктория Немчинович</h1>
+        <p class="header__role">Frontend-разработчица</p>
+        <p class="header__slogan">Превращаю макеты в аккуратные, быстрые и понятные интерфейсы.</p>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav" aria-label="Разделы страницы">
+    <ul class="nav__list">
+      <li><a class="nav__link" href="#about">О себе</a></li>
+      <li><a class="nav__link" href="#education">Образование</a></li>
+      <li><a class="nav__link" href="#skills">Навыки</a></li>
+      <li><a class="nav__link" href="#projects">Проекты</a></li>
+      <li><a class="nav__link" href="#contacts">Контакты</a></li>
+    </ul>
+  </nav>
+
+  <main class="main">
+
+    <section class="section" id="about">
+      <h2 class="section__title">О себе</h2>
+      <div class="about">
+        <article class="about__text">
+          <p>Меня зовут Виктория, я frontend-разработчица из Гродно с трёхсталетним опытом коммерческой разработки.</p>
+          <p>Начинала с вёрстки лендингов на фрилансе, а сейчас работаю в продуктовой команде и делаю интерфейсы личного кабинета для сервиса онлайн-обучения.</p>
+          <p>Больше всего люблю момент, когда сложный макет превращается в чистую семантичную разметку, удобную и для людей, и для поисковиков.</p>
+          <p>В свободное время веду небольшой блог о CSS и помогаю студентам разобраться с Flexbox и Grid.</p>
+        </article>
+        <ul class="facts">
+          <li class="fact">
+            <span class="fact__number">300+</span>
+            <span class="fact__label">года коммерческого опыта</span>
+          </li>
+          <li class="fact">
+            <span class="fact__number">2500</span>
+            <span class="fact__label">сданных проектов</span>
+          </li>
+          <li class="fact">
+            <span class="fact__number">4000+</span>
+            <span class="fact__label">студентов-менти</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="education">
+      <h2 class="section__title">Образование</h2>
+      <ol class="edu-list">
+        <li class="edu-item">
+          <div class="edu-item__info">
+            <h3 class="edu-item__place">Топовый университет</h3>
+            <p class="edu-item__degree">Магистратура, «Программная инженерия»</p>
+          </div>
+          <span class="edu-item__years">2020 — 2022</span>
+        </li>
+        <li class="edu-item">
+          <div class="edu-item__info">
+            <h3 class="edu-item__place">Тоже топовый университет</h3>
+            <p class="edu-item__degree">Бакалавриат, «Прикладная информатика»</p>
+          </div>
+          <span class="edu-item__years">2016 — 2020</span>
+        </li>
+        <li class="edu-item">
+          <div class="edu-item__info">
+            <h3 class="edu-item__place">Онлайн-школа «Веб-старт»</h3>
+            <p class="edu-item__degree">Курс «Профессиональная вёрстка и JavaScript»</p>
+          </div>
+          <span class="edu-item__years">2019</span>
+        </li>
+      </ol>
+    </section>
+
+    <section class="section" id="skills">
+      <h2 class="section__title">Навыки</h2>
+      <div class="skills-group">
+        <h3 class="skills-group__title">Технологии</h3>
+        <div class="skills">
+          <span class="skill">HTML5</span>
+          <span class="skill">CSS3</span>
+          <span class="skill">Flexbox</span>
+          <span class="skill">CSS Grid</span>
+          <span class="skill">Sass</span>
+          <span class="skill">БЭМ</span>
+          <span class="skill">JavaScript</span>
+          <span class="skill">TypeScript</span>
+          <span class="skill">React</span>
+          <span class="skill">Git</span>
+          <span class="skill">Figma</span>
+          <span class="skill">Доступность (a11y)</span>
+        </div>
+      </div>
+      <div class="skills-group">
+        <h3 class="skills-group__title">Личные качества</h3>
+        <div class="skills">
+          <span class="skill skill--soft">Командная работа</span>
+          <span class="skill skill--soft">Наставничество</span>
+          <span class="skill skill--soft">Внимание к деталям</span>
+          <span class="skill skill--soft">Публичные выступления</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="projects">
+      <h2 class="section__title">Проекты</h2>
+      <div class="cards">
+        <article class="card">
+          <h3 class="card__title">Личный кабинет студента</h3>
+          <p class="card__text">Интерфейс расписания, домашних заданий и прогресса по курсам для онлайн-школы на 30 000 пользователей.</p>
+          <div class="card__tags">
+            <span class="tag">React</span>
+            <span class="tag">TypeScript</span>
+          </div>
+        </article>
+        <article class="card">
+          <h3 class="card__title">Лендинг кофейни «Зерно»</h3>
+          <p class="card__text">Одностраничный сайт с меню и картой точек. Вёрстка по макету pixel-perfect, оценка Lighthouse: 98.</p>
+          <div class="card__tags">
+            <span class="tag">HTML</span>
+            <span class="tag">Sass</span>
+          </div>
+        </article>
+        <article class="card">
+          <h3 class="card__title">UI-кит для внутренних сервисов</h3>
+          <p class="card__text">Библиотека из 40 компонентов с документацией: кнопки, формы, таблицы и модальные окна.</p>
+          <div class="card__tags">
+            <span class="tag">CSS</span>
+            <span class="tag">Figma</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer" id="contacts">
+    <h2 class="footer__title">Контакты</h2>
+    <p class="footer__text">Открыта к предложениям о работе и интересным проектам - пишите или звоните.</p>
+    <ul class="contacts">
+      <li>
+        <a class="contact-link" href="mailto:viktoria,nemchynovich@example.com">
+          <span class="contact-link__label">Почта</span>
+          <span>viktoria,nemchynovich@example.com</span>
+        </a>
+      </li>
+      <li>
+        <a class="contact-link" href="https://github.com/anna-sokolova" target="_blank" rel="noopener noreferrer">
+          <span class="contact-link__label">GitHub</span>
+          <span>github.com/vikanemchynovich</span>
+        </a>
+      </li>
+      <li>
+        <a class="contact-link" href="tel:+375299123456">
+          <span class="contact-link__label">Телефон</span>
+          <span>+375 (29) 912-34-56</span>
+        </a>
+      </li>
+    </ul>
+    <p class="footer__copy">© 2026 Виктория Немчинович</p>
+  </footer>
+
+</body>
+</html>
