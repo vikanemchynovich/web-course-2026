@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Список задач</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+  <main class="app">
+    <h1 class="app__title">Список задач</h1>
+
+    <!-- Форма ловит и клик по кнопке «Добавить», и нажатие Enter в поле: оба вызывают событие submit -->
+    <form class="add-form" id="add-form" novalidate>
+      <label class="visually-hidden" for="task-input">Текст новой задачи</label>
+      <input class="add-form__input" id="task-input" type="text"
+             placeholder="Что нужно сделать?" autocomplete="off" maxlength="200"
+             aria-describedby="add-error">
+      <button class="add-form__button" type="submit">Добавить</button>
+    </form>
+    <p class="add-form__error" id="add-error" aria-live="assertive"></p>
+
+    <div class="toolbar">
+      <p class="counter" id="counter" aria-live="polite"></p>
+      <div class="filters" role="group" aria-label="Какие задачи показывать">
+        <button class="filters__button" type="button" data-filter="all">Все</button>
+        <button class="filters__button" type="button" data-filter="active">Активные</button>
+        <button class="filters__button" type="button" data-filter="completed">Завершённые</button>
+      </div>
+    </div>
+
+    <!-- Задачи появляются здесь: разметку создаёт script.js -->
+    <ul class="task-list" id="task-list"></ul>
+    <p class="empty" id="empty-state"></p>
+  </main>
+
+</body>
+</html>

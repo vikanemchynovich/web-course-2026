@@ -1,0 +1,326 @@
+/* ===== Токены ===== */
+:root {
+  --bg: #EDEFF3;
+  --surface: #FFFFFF;
+  --text: #1B1F27;
+  --muted: #5B6271;
+  --line: #DDE1E8;
+  --accent: #2F55D4;
+  --accent-dark: #2443AB;
+  --accent-soft: #E6ECFC;
+  --danger: #C2342B;
+  --danger-soft: #FCE9E7;
+  --done: #2E8A57;
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 48px 16px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text);
+  background-color: var(--bg);
+}
+
+h1, p, ul {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+button, input {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===== Карточка приложения ===== */
+.app {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 28px 24px 24px;
+  border-radius: 20px;
+  background-color: var(--surface);
+  box-shadow: 0 1px 2px rgba(27, 31, 39, 0.06), 0 12px 32px rgba(27, 31, 39, 0.08);
+}
+
+.app__title {
+  margin-bottom: 20px;
+  font-size: 28px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+/* ===== Форма добавления ===== */
+.add-form {
+  display: flex;
+  gap: 8px;
+}
+
+.add-form__input {
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  padding: 10px 14px;
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  background-color: var(--surface);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.add-form__input::placeholder {
+  color: #7A8190;
+}
+
+.add-form__input:hover {
+  border-color: #BFC6D2;
+}
+
+.add-form__input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.add-form__input.is-invalid {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 4px var(--danger-soft);
+}
+
+.add-form__button {
+  flex-shrink: 0;
+  min-height: 48px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: var(--radius);
+  font-weight: 600;
+  color: #FFFFFF;
+  background-color: var(--accent);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.add-form__button:hover {
+  background-color: var(--accent-dark);
+}
+
+.add-form__error {
+  min-height: 24px;
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--danger);
+}
+
+.shake {
+  animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+  25% { transform: translateX(-6px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-3px); }
+}
+
+/* ===== Счётчик и фильтры ===== */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.counter {
+  font-size: 15px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.filters {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius);
+  background-color: var(--bg);
+}
+
+.filters__button {
+  min-height: 40px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 9px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--muted);
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.filters__button:hover {
+  color: var(--text);
+}
+
+.filters__button.is-active {
+  color: var(--text);
+  background-color: var(--surface);
+  box-shadow: 0 1px 3px rgba(27, 31, 39, 0.12);
+}
+
+/* ===== Список задач ===== */
+.task {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+/* Анимация только у только что добавленной задачи, а не у всего списка при каждой перерисовке */
+.task.is-new {
+  animation: appear 0.2s ease;
+}
+
+@keyframes appear {
+  from { opacity: 0; transform: translateY(-4px); }
+}
+
+.task__label {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+/* Свой чекбокс: квадрат со скруглением, при отметке — заливка и галочка */
+.task__checkbox {
+  appearance: none;
+  flex-shrink: 0;
+  display: grid;
+  place-content: center;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  border: 2px solid #AEB5C2;
+  border-radius: 7px;
+  background-color: var(--surface);
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.task__checkbox::after {
+  content: "";
+  width: 6px;
+  height: 11px;
+  margin-top: -2px;
+  border: solid #FFFFFF;
+  border-width: 0 2.5px 2.5px 0;
+  transform: rotate(45deg) scale(0);
+  transition: transform 0.15s;
+}
+
+.task__label:hover .task__checkbox {
+  border-color: var(--done);
+}
+
+.task__checkbox:checked {
+  border-color: var(--done);
+  background-color: var(--done);
+}
+
+.task__checkbox:checked::after {
+  transform: rotate(45deg) scale(1);
+}
+
+.task__text {
+  overflow-wrap: anywhere;
+  transition: opacity 0.2s, color 0.2s;
+}
+
+/* Выполненная задача */
+.completed .task__text {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.task__delete {
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+  background-color: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.task__delete:hover {
+  color: var(--danger);
+  background-color: var(--danger-soft);
+}
+
+.empty {
+  padding: 32px 0 12px;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* ===== Узкие экраны ===== */
+@media (max-width: 480px) {
+  body {
+    padding: 16px 12px;
+  }
+
+  .app {
+    padding: 20px 16px 16px;
+  }
+
+  .filters {
+    width: 100%;
+  }
+
+  .filters__button {
+    flex: 1;
+    padding: 0 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shake,
+  .task.is-new {
+    animation: none;
+  }
+}
