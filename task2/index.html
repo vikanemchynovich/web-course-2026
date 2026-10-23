@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Глазурь — студия керамики в Гродно</title>
+  <meta name="description" content="Курсы гончарного круга, ручной лепки и глазуровки в Гродно. Группы до шести человек, глина и обжиг включены.">
+  <link rel="icon" href="img/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="page">
+
+  <!-- ===== Шапка ===== -->
+  <header class="header">
+    <div class="header__inner container">
+      <a class="logo" href="#top">
+        <img class="logo__mark" src="img/logo.svg" alt="" width="40" height="40">
+        <span class="logo__text">Глазурь</span>
+      </a>
+
+      <!-- Гамбургер на чистом CSS: чекбокс хранит состояние «открыто/закрыто», label — сама иконка -->
+      <input class="nav-toggle" type="checkbox" id="nav-toggle">
+      <label class="burger" for="nav-toggle">
+        <span class="burger__line"></span>
+        <span class="visually-hidden">Открыть меню</span>
+      </label>
+
+      <nav class="nav" aria-label="Основное меню">
+        <ul class="nav__list">
+          <li><a class="nav__link" href="#courses">Курсы</a></li>
+          <li><a class="nav__link" href="#process">Как учим</a></li>
+          <li><a class="nav__link" href="#works">Работы</a></li>
+          <li><a class="nav__link" href="#signup">Контакты</a></li>
+        </ul>
+      </nav>
+
+      <a class="button button--small header__cta" href="#signup">Записаться</a>
+    </div>
+  </header>
+
+  <main class="main" id="top">
+
+    <!-- ===== Герой ===== -->
+    <section class="hero">
+      <div class="hero__inner container">
+        <div class="hero__text">
+          <h1 class="hero__title">Гончарный круг за четыре вечера</h1>
+          <p class="hero__lead">Студия керамики в центре Гродно. Учим с нуля в группах до шести человек: от первого кома глины до чашки, из которой можно пить чай.</p>
+          <div class="hero__actions">
+            <a class="button" href="#signup">Записаться на пробное</a>
+            <a class="button button--ghost" href="#courses">Выбрать курс</a>
+          </div>
+        </div>
+
+        <img class="hero__image" src="img/hero-shelf.svg" width="660" height="480"
+             alt="Полка с керамикой: синяя ваза, зелёная банка, жёлтая кружка и тёмная пиала">
+
+        <ul class="hero__facts">
+          <li class="fact"><strong class="fact__title">До 6 человек</strong> в группе, мастер успевает подойти к каждому</li>
+          <li class="fact"><strong class="fact__title">Глина и обжиг</strong> уже входят в стоимость занятия</li>
+          <li class="fact"><strong class="fact__title">Через три недели</strong> забираете готовые изделия домой</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== Курсы ===== -->
+    <section class="section courses" id="courses">
+      <div class="container">
+        <div class="section__head">
+          <h2 class="section__title">Курсы</h2>
+          <p class="section__intro">Начните с пробного занятия, а потом решите, что вам ближе: круг или лепка руками.</p>
+        </div>
+
+        <div class="courses__grid">
+          <article class="course course--cobalt">
+            <span class="tile" aria-hidden="true"></span>
+            <h3 class="course__title">Пробное занятие</h3>
+            <ul class="course__meta">
+              <li class="chip">1 встреча</li>
+              <li class="chip">2 часа</li>
+            </ul>
+            <p class="course__text">Сядете за круг и сделаете чашку или пиалу. Мы её обожжём, покроем прозрачной глазурью и отдадим через три недели.</p>
+            <div class="course__footer">
+              <p class="course__price">2 500 рублей</p>
+              <a class="button button--small" href="#signup">Записаться</a>
+            </div>
+          </article>
+
+          <article class="course course--celadon">
+            <span class="tile" aria-hidden="true"></span>
+            <h3 class="course__title">Гончарный круг</h3>
+            <ul class="course__meta">
+              <li class="chip">4 встречи</li>
+              <li class="chip">по 3 часа</li>
+            </ul>
+            <p class="course__text">Центровка, вытягивание стенок, обточка и ручки. За курс сделаете 4–6 вещей, которыми можно пользоваться дома.</p>
+            <div class="course__footer">
+              <p class="course__price">11 000 рублей</p>
+              <a class="button button--small" href="#signup">Записаться</a>
+            </div>
+          </article>
+
+          <article class="course course--ash">
+            <span class="tile" aria-hidden="true"></span>
+            <h3 class="course__title">Ручная лепка</h3>
+            <ul class="course__meta">
+              <li class="chip">3 встречи</li>
+              <li class="chip">по 2,5 часа</li>
+            </ul>
+            <p class="course__text">Пласт, жгут и щипок: тарелки, подсвечники и вазы без гончарного круга. Детям от 10 лет можно вместе с родителями.</p>
+            <div class="course__footer">
+              <p class="course__price">7 500 рублей</p>
+              <a class="button button--small" href="#signup">Записаться</a>
+            </div>
+          </article>
+
+          <article class="course course--tenmoku">
+            <span class="tile" aria-hidden="true"></span>
+            <h3 class="course__title">Глазуровка</h3>
+            <ul class="course__meta">
+              <li class="chip">1 встреча</li>
+              <li class="chip">2 часа</li>
+            </ul>
+            <p class="course__text">Покрываете обожжённые изделия глазурями из палитры студии. В ней 30 цветов, от кобальта до тэммоку.</p>
+            <div class="course__footer">
+              <p class="course__price">3 000 рублей</p>
+              <a class="button button--small" href="#signup">Записаться</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Как проходит курс ===== -->
+    <section class="section process" id="process">
+      <div class="container">
+        <div class="section__head">
+          <h2 class="section__title">Как проходит курс на круге</h2>
+          <p class="section__intro">Четыре вечера, каждый со своей задачей. Пропустили занятие — догоните с другой группой.</p>
+        </div>
+
+        <ol class="steps">
+          <li class="step">
+            <span class="step__num" aria-hidden="true">1</span>
+            <h3 class="step__title">Центровка</h3>
+            <p class="step__text">Учимся сажать ком глины ровно в центр круга. Самый трудный шаг: на него уходит половина первого вечера.</p>
+          </li>
+          <li class="step">
+            <span class="step__num" aria-hidden="true">2</span>
+            <h3 class="step__title">Вытягивание</h3>
+            <p class="step__text">Раскрываем ком и поднимаем стенки. К концу второго вечера ровный цилиндр получается у всех.</p>
+          </li>
+          <li class="step">
+            <span class="step__num" aria-hidden="true">3</span>
+            <h3 class="step__title">Обточка</h3>
+            <p class="step__text">Подсохшее изделие ставим обратно на круг, срезаем лишнее, формируем ножку и лепим ручки.</p>
+          </li>
+          <li class="step">
+            <span class="step__num" aria-hidden="true">4</span>
+            <h3 class="step__title">Глазурь и обжиг</h3>
+            <p class="step__text">Первый обжиг при 900 °C, затем глазуровка и второй обжиг при 1240 °C. После него посуда готова к чаю и посудомойке.</p>
+          </li>
+          <li class="steps__note">Между занятиями изделия сохнут на стеллажах студии, носить их домой и обратно не нужно.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===== Работы учеников ===== -->
+    <section class="section works-section" id="works">
+      <div class="container">
+        <div class="section__head">
+          <h2 class="section__title">Работы учеников</h2>
+          <p class="section__intro">Всё это сделано на первом курсе. Мастер ничего не доделывал за учеников, только обжигал.</p>
+        </div>
+
+        <div class="works">
+          <figure class="work work--vase">
+            <img class="work__img" src="img/work-vase.svg" width="400" height="400" alt="Высокая ваза с узким горлом в синей кобальтовой глазури">
+            <figcaption class="work__caption">Ваза, кобальт</figcaption>
+          </figure>
+          <figure class="work work--bowls">
+            <img class="work__img" src="img/work-bowls.svg" width="400" height="400" alt="Две пиалы: жёлтая и тёмно-коричневая">
+            <figcaption class="work__caption">Пиалы, зола и тэммоку</figcaption>
+          </figure>
+          <figure class="work work--mug">
+            <img class="work__img" src="img/work-mug.svg" width="400" height="400" alt="Кружка с ручкой в зелёной глазури">
+            <figcaption class="work__caption">Кружка, селадон</figcaption>
+          </figure>
+          <figure class="work work--jar">
+            <img class="work__img" src="img/work-jar.svg" width="400" height="400" alt="Пузатая банка в тёмно-коричневой глазури">
+            <figcaption class="work__caption">Банка, тэммоку</figcaption>
+          </figure>
+          <figure class="work work--plate">
+            <img class="work__img" src="img/work-plate.svg" width="400" height="400" alt="Зелёная тарелка с тёмными крапинками, вид сверху">
+            <figcaption class="work__caption">Тарелка, селадон с железистым крапом</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Запись и контакты ===== -->
+    <section class="section signup" id="signup">
+      <div class="signup__inner container">
+        <div class="signup__info">
+          <h2 class="section__title">Запишитесь на занятие</h2>
+          <p class="signup__text">Оставьте заявку, и в течение рабочего дня мы напишем вам с ближайшими датами. Группы по будням в 19:00, по выходным в 12:00.</p>
+
+          <dl class="contacts">
+            <div class="contacts__item">
+              <dt class="contacts__term">Адрес</dt>
+              <dd class="contacts__value">Гродно, ул. Гродненская, 12, второй этаж</dd>
+            </div>
+            <div class="contacts__item">
+              <dt class="contacts__term">Телефон</dt>
+              <dd class="contacts__value"><a class="contacts__link" href="tel:+375290000000">+375 (29) 000-00-00</a></dd>
+            </div>
+            <div class="contacts__item">
+              <dt class="contacts__term">Почта</dt>
+              <dd class="contacts__value"><a class="contacts__link" href="mailto:hello@glazur.example">hello@glazur.example</a></dd>
+            </div>
+          </dl>
+        </div>
+
+        <!-- Отправка не реализуется: у формы нет action, на странице нет JavaScript -->
+        <form class="form">
+          <div class="form__row">
+            <div class="form__field">
+              <label class="form__label" for="name">Имя</label>
+              <input class="form__input" id="name" name="name" type="text" autocomplete="name" placeholder="Как к вам обращаться" required>
+            </div>
+            <div class="form__field">
+              <label class="form__label" for="email">Email</label>
+              <input class="form__input" id="email" name="email" type="email" autocomplete="email" placeholder="name@example.com" required>
+            </div>
+          </div>
+          <div class="form__field">
+            <label class="form__label" for="message">Сообщение</label>
+            <textarea class="form__input form__textarea" id="message" name="message" rows="5" placeholder="Какой курс интересует, в какие дни удобно"></textarea>
+          </div>
+          <button class="button form__button" type="submit">Отправить заявку</button>
+          <p class="form__note">Нажимая кнопку, вы соглашаетесь на обработку персональных данных.</p>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== Подвал ===== -->
+  <footer class="footer">
+    <div class="footer__inner container">
+      <div class="footer__brand">
+        <p class="footer__logo">Глазурь</p>
+        <p class="footer__text">Студия керамики в Гродно. Учим работать с глиной с 2019 года.</p>
+      </div>
+
+      <nav class="footer__nav" aria-label="Меню в подвале">
+        <ul class="footer__list">
+          <li><a class="footer__link" href="#courses">Курсы</a></li>
+          <li><a class="footer__link" href="#process">Как учим</a></li>
+          <li><a class="footer__link" href="#works">Работы</a></li>
+        </ul>
+      </nav>
+
+      <ul class="footer__list">
+        <li><a class="footer__link" href="tel:+375290000000">+375 (29) 000-00-00</a></li>
+        <li><a class="footer__link" href="mailto:hello@glazur.example">hello@glazur.example</a></li>
+      </ul>
+
+      <ul class="footer__list">
+        <li><a class="footer__link" href="https://t.me/" target="_blank" rel="noopener noreferrer">Telegram</a></li>
+        <li><a class="footer__link" href="https://vk.com/" target="_blank" rel="noopener noreferrer">ВКонтакте</a></li>
+      </ul>
+
+      <p class="footer__copy">© 2026 Студия керамики «Глазурь». Учебный проект. Виктория Немчинович. </p>
+    </div>
+  </footer>
+
+</body>
+</html>
