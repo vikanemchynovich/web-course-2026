@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Лента постов</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+  <main class="feed">
+    <header class="feed__header">
+      <h1 class="feed__title">Лента постов</h1>
+      <p class="feed__subtitle">Посты с JSONPlaceholder. Листайте вниз — новые подгрузятся сами.</p>
+    </header>
+
+    <!-- Поиск по заголовкам уже загруженных постов -->
+    <div class="search" role="search">
+      <label class="search__label" for="search-input">Поиск по заголовку</label>
+      <div class="search__field">
+        <input class="search__input" id="search-input" type="search" placeholder="Например, dolor"
+               autocomplete="off" spellcheck="false" aria-describedby="search-summary">
+        <button class="search__clear" id="search-clear" type="button" aria-label="Очистить поиск" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+      <p class="search__summary" id="search-summary" aria-live="polite"></p>
+    </div>
+
+    <!-- Карточки создаёт script.js из массива state.posts -->
+    <ol class="posts" id="posts"></ol>
+
+    <!-- Нижняя часть ленты: индикатор, ошибка, «больше нет», пустой результат поиска -->
+    <div class="feed__footer">
+      <p class="empty" id="empty" hidden></p>
+
+      <div class="loader" id="loader" role="status" hidden>
+        <span class="loader__spinner" aria-hidden="true"></span>
+        <span class="loader__text">Загрузка…</span>
+      </div>
+
+      <div class="error" id="error" role="alert" hidden>
+        <p class="error__title">Не получилось загрузить посты</p>
+        <p class="error__text" id="error-text"></p>
+        <button class="error__button" id="retry" type="button">Попробовать снова</button>
+      </div>
+
+      <p class="notice notice--paused" id="paused" hidden>
+        Пока идёт поиск, новые посты не подгружаются. Очистите поле поиска, чтобы листать дальше.
+      </p>
+
+      <p class="notice notice--end" id="end" hidden>Больше постов нет</p>
+    </div>
+
+    <!-- «Маячок» для IntersectionObserver: когда он ближе 200px к низу экрана — грузим следующую порцию -->
+    <div class="sentinel" id="sentinel" aria-hidden="true"></div>
+  </main>
+
+  <button class="to-top" id="to-top" type="button" hidden>Наверх</button>
+
+</body>
+</html>
