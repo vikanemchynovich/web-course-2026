@@ -1,0 +1,484 @@
+/* =========================================================
+   Змейка — в общем стиле лабораторных №3–5
+   ========================================================= */
+
+:root {
+  --ink: #1A0B2E;
+  --paper: #FFFFFF;
+  --violet: #6A11FF;
+  --magenta: #FF2E93;
+  --orange: #FF8A00;
+  --yellow: #FFE600;
+  --cyan: #3DF5E0;
+  --lime: #B7FF5C;
+  --pink: #FF9AD5;
+
+  --border: 3px solid var(--ink);
+  --shadow-s: 3px 3px 0 var(--ink);
+  --shadow-m: 5px 5px 0 var(--ink);
+  --shadow-l: 10px 10px 0 var(--ink);
+
+  --font-display: "Arial Black", "Segoe UI Black", "Helvetica Neue", system-ui, sans-serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* overflow на html уходит на окно, а body обрезает вращающиеся украшения сам */
+html {
+  overflow-x: clip;
+}
+
+h1, p {
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px dashed var(--ink);
+  outline-offset: 3px;
+}
+
+/* ===== Фон ===== */
+body {
+  position: relative;
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: clip;
+  padding: 64px 20px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--ink);
+  background-color: var(--violet);
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.28) 1.4px, transparent 1.6px),
+    linear-gradient(125deg, var(--violet) 0%, var(--magenta) 48%, var(--orange) 100%);
+  background-size: 22px 22px, 220% 220%;
+  background-attachment: fixed;
+  animation: drift 16s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from { background-position: 0 0, 0% 30%; }
+  to   { background-position: 0 0, 100% 70%; }
+}
+
+/* Розовый круг в полоску слева снизу и лаймовая искра справа сверху */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  z-index: 0;
+  pointer-events: none;
+}
+
+body::before {
+  bottom: -100px;
+  left: -90px;
+  width: 280px;
+  height: 280px;
+  border: 4px solid var(--ink);
+  border-radius: 50%;
+  background:
+    repeating-linear-gradient(-45deg, transparent 0 10px, rgba(26, 11, 46, 0.16) 10px 13px),
+    var(--pink);
+  box-shadow: 8px -8px 0 var(--ink);
+}
+
+body::after {
+  top: 8vh;
+  right: 5vw;
+  width: 110px;
+  height: 110px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50 3 58.5 41.5 97 50 58.5 58.5 50 97 41.5 58.5 3 50 41.5 41.5' fill='%23B7FF5C' stroke='%231A0B2E' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  animation: twinkle 3.2s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50%      { transform: rotate(45deg) scale(0.82); }
+}
+
+/* ===== Карточка ===== */
+.snake {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px 36px 30px;
+  border: 4px solid var(--ink);
+  border-radius: 32px;
+  background-color: var(--paper);
+  box-shadow: var(--shadow-l);
+}
+
+/* Вращающийся «взрыв» на правом верхнем углу */
+.snake::before {
+  content: "";
+  position: absolute;
+  top: -54px;
+  right: -46px;
+  width: 128px;
+  height: 128px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50 3 58 14.9 70.4 7.7 72.4 21.9 86.7 20.7 82.4 34.4 95.8 39.5 86 50 95.8 60.5 82.4 65.6 86.7 79.3 72.4 78.1 70.4 92.3 58 85.1 50 97 42 85.1 29.6 92.3 27.6 78.1 13.3 79.3 17.6 65.6 4.2 60.5 14 50 4.2 39.5 17.6 34.4 13.3 20.7 27.6 21.9 29.6 7.7 42 14.9' fill='%23FFE600' stroke='%231A0B2E' stroke-width='2.5' stroke-linejoin='round'/%3E%3Ccircle cx='50' cy='50' r='16' fill='%23FF2E93' stroke='%231A0B2E' stroke-width='2.5'/%3E%3C/svg%3E") center / contain no-repeat;
+  animation: spin 22s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== Заголовок ===== */
+.snake__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.snake__title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 56px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--paper);
+  -webkit-text-stroke: 2px var(--ink);
+  paint-order: stroke fill;
+  text-shadow:
+    3px 3px 0 var(--lime),
+    6px 6px 0 var(--ink);
+  transform: rotate(-2deg);
+}
+
+.snake__subtitle {
+  max-width: 26em;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+/* ===== Счёт ===== */
+.hud {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.stat {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 16px;
+  border: var(--border);
+  border-radius: 999px;
+  font-weight: 800;
+  box-shadow: var(--shadow-s);
+}
+
+.stat--score {
+  background-color: var(--yellow);
+  transform: rotate(-2deg);
+}
+
+.stat--best {
+  background-color: var(--cyan);
+  transform: rotate(1.5deg);
+}
+
+.stat__value {
+  min-width: 1.2em;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Съели яблоко — плашка счёта подпрыгивает */
+.stat--score.is-bumped {
+  animation: bump 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes bump {
+  50% { transform: rotate(-4deg) scale(1.18); }
+}
+
+.pause-button {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 3px dashed var(--ink);
+  border-radius: 999px;
+  font-weight: 800;
+  background-color: var(--paper);
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.pause-button:hover:not(:disabled) {
+  border-style: solid;
+  background-color: var(--pink);
+  transform: rotate(-3deg);
+}
+
+.pause-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ===== Поле ===== */
+.field {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 1;
+  border: 5px solid var(--ink);
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: var(--ink);
+  box-shadow: 10px 10px 0 var(--lime), 14px 14px 0 var(--ink);
+}
+
+.field__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Окно поверх поля: старт, пауза, конец игры */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  padding: 24px;
+  text-align: center;
+  background-color: rgba(26, 11, 46, 0.55);
+  backdrop-filter: blur(2px);
+}
+
+.overlay[hidden] {
+  display: none;
+}
+
+.overlay__title {
+  padding: 10px 22px;
+  border: 4px solid var(--ink);
+  border-radius: 18px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 34px;
+  line-height: 1.1;
+  background-color: var(--yellow);
+  box-shadow: 6px 6px 0 var(--magenta), 9px 9px 0 var(--ink);
+  transform: rotate(-3deg);
+  animation: pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.overlay--over .overlay__title {
+  background-color: var(--pink);
+}
+
+.overlay--won .overlay__title {
+  background-color: var(--lime);
+}
+
+@keyframes pop {
+  from { opacity: 0; transform: scale(0.6) rotate(-10deg); }
+}
+
+.overlay__text {
+  max-width: 22em;
+  padding: 4px 14px;
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 18px;
+  color: var(--paper);
+  background-color: var(--ink);
+}
+
+.overlay__button {
+  min-height: 52px;
+  padding: 0 26px;
+  border: var(--border);
+  border-radius: 16px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 18px;
+  color: var(--ink);
+  background-color: var(--lime);
+  box-shadow: var(--shadow-m);
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+}
+
+.overlay__button:hover {
+  background-color: var(--yellow);
+  transform: translate(-2px, -2px) rotate(-2deg);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+.overlay__button:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.overlay :focus-visible {
+  outline-color: var(--yellow);
+}
+
+/* ===== Кнопки-стрелки ===== */
+.dpad {
+  display: grid;
+  grid-template-columns: repeat(3, 56px);
+  grid-template-rows: repeat(2, 56px);
+  grid-template-areas:
+    ".    up    ."
+    "left down right";
+  gap: 8px;
+}
+
+.dpad__button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  border: var(--border);
+  border-radius: 14px;
+  background-color: var(--paper);
+  box-shadow: var(--shadow-s);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.12s ease;
+}
+
+.dpad__button svg {
+  width: 26px;
+  height: 26px;
+  fill: var(--ink);
+}
+
+.dpad__button--up    { grid-area: up; }
+.dpad__button--left  { grid-area: left; }
+.dpad__button--down  { grid-area: down; }
+.dpad__button--right { grid-area: right; }
+
+.dpad__button:hover {
+  background-color: var(--cyan);
+}
+
+.dpad__button:active {
+  transform: translate(3px, 3px);
+  box-shadow: none;
+  background-color: var(--yellow);
+}
+
+/* ===== Подсказка по клавишам ===== */
+.keys {
+  max-width: 30em;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 2;
+  text-align: center;
+}
+
+kbd {
+  display: inline-block;
+  min-width: 26px;
+  margin: 0 2px;
+  padding: 0 6px;
+  border: 2px solid var(--ink);
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 20px;
+  text-align: center;
+  background-color: #F3EDFF;
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
+/* ===== Средние экраны ===== */
+@media (max-width: 800px) {
+  .snake::before {
+    right: -10px;
+  }
+}
+
+/* ===== Телефоны ===== */
+@media (max-width: 560px) {
+  body {
+    padding: 48px 12px;
+  }
+
+  body::before {
+    width: 180px;
+    height: 180px;
+    bottom: -80px;
+    left: -70px;
+  }
+
+  body::after {
+    width: 64px;
+    height: 64px;
+  }
+
+  .snake {
+    gap: 18px;
+    padding: 32px 14px 22px;
+    border-radius: 24px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  .snake::before {
+    top: -40px;
+    right: -4px;
+    width: 80px;
+    height: 80px;
+  }
+
+  .snake__title {
+    font-size: 42px;
+  }
+
+  .field {
+    border-width: 4px;
+    border-radius: 16px;
+    box-shadow: 6px 6px 0 var(--lime), 9px 9px 0 var(--ink);
+  }
+
+  .overlay__title {
+    font-size: 26px;
+  }
+
+  .dpad {
+    grid-template-columns: repeat(3, 64px);
+    grid-template-rows: repeat(2, 64px);
+  }
+}
+
+/* ===== Для тех, кто отключил анимации ===== */
+@media (prefers-reduced-motion: reduce) {
+  body,
+  body::after,
+  .snake::before,
+  .overlay__title,
+  .stat--score.is-bumped {
+    animation: none;
+  }
+}

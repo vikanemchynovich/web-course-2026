@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Змейка</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+  <main class="snake">
+    <header class="snake__header">
+      <h1 class="snake__title">Змейка</h1>
+      <p class="snake__subtitle">Собирайте яблоки и не врезайтесь в стены и в собственный хвост.</p>
+    </header>
+
+    <div class="hud">
+      <p class="stat stat--score">Счёт <span class="stat__value" id="score">0</span></p>
+      <p class="stat stat--best">Рекорд <span class="stat__value" id="best">0</span></p>
+      <button class="pause-button" id="pause" type="button">Пауза</button>
+    </div>
+
+    <!-- Поле: canvas 480×480, сетка 20×20 клеток по 24px. Поверх — HTML-окно для старта, паузы и конца игры -->
+    <div class="field">
+      <canvas class="field__canvas" id="canvas" width="480" height="480" aria-label="Игровое поле змейки">
+        Ваш браузер не поддерживает canvas.
+      </canvas>
+
+      <div class="overlay" id="overlay" role="dialog" aria-modal="false" aria-labelledby="overlay-title">
+        <p class="overlay__title" id="overlay-title"></p>
+        <p class="overlay__text" id="overlay-text"></p>
+        <button class="overlay__button" id="overlay-button" type="button"></button>
+      </div>
+    </div>
+
+    <!-- Кнопки для телефонов; на компьютере работают и стрелки клавиатуры -->
+    <div class="dpad" aria-label="Управление змейкой">
+      <button class="dpad__button dpad__button--up" type="button" data-direction="up" aria-label="Вверх">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5l7 9H5z"/></svg>
+      </button>
+      <button class="dpad__button dpad__button--left" type="button" data-direction="left" aria-label="Влево">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l9-7v14z"/></svg>
+      </button>
+      <button class="dpad__button dpad__button--down" type="button" data-direction="down" aria-label="Вниз">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19l7-9H5z"/></svg>
+      </button>
+      <button class="dpad__button dpad__button--right" type="button" data-direction="right" aria-label="Вправо">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12l-9-7v14z"/></svg>
+      </button>
+    </div>
+
+    <p class="keys">
+      <kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd> или <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> — управление,
+      <kbd>Пробел</kbd> — пауза, <kbd>Enter</kbd> — начать заново
+    </p>
+  </main>
+
+</body>
+</html>
