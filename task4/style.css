@@ -1,0 +1,817 @@
+/* =========================================================
+   Быки и коровы — в стиле лабораторной №3
+   Кислотный градиент, точечный растр, толстые обводки,
+   жёсткие тени, цифры на «плитках».
+   ========================================================= */
+
+:root {
+  --ink: #1A0B2E;
+  --paper: #FFFFFF;
+  --violet: #6A11FF;
+  --magenta: #FF2E93;
+  --orange: #FF8A00;
+  --yellow: #FFE600;
+  --cyan: #3DF5E0;
+  --lime: #B7FF5C;
+  --pink: #FF9AD5;
+  --red: #FF3B30;
+
+  --border: 3px solid var(--ink);
+  --shadow-s: 3px 3px 0 var(--ink);
+  --shadow-m: 5px 5px 0 var(--ink);
+  --shadow-l: 10px 10px 0 var(--ink);
+
+  --font-display: "Arial Black", "Segoe UI Black", "Helvetica Neue", system-ui, sans-serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-digits: ui-monospace, "Cascadia Mono", "SF Mono", Menlo, Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* overflow на html уходит на окно, а body обрезает вращающиеся украшения сам */
+html {
+  overflow-x: clip;
+}
+
+h1, h2, p, ol {
+  margin: 0;
+}
+
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+button, input {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px dashed var(--ink);
+  outline-offset: 3px;
+}
+
+/* ===== Фон ===== */
+body {
+  position: relative;
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: clip;
+  padding: 72px 20px 64px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--ink);
+  background-color: var(--violet);
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.28) 1.4px, transparent 1.6px),
+    linear-gradient(125deg, var(--violet) 0%, var(--magenta) 48%, var(--orange) 100%);
+  background-size: 22px 22px, 220% 220%;
+  background-attachment: fixed;
+  animation: drift 16s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from { background-position: 0 0, 0% 30%; }
+  to   { background-position: 0 0, 100% 70%; }
+}
+
+/* Жёлтый круг в полоску слева сверху и бирюзовая искра справа снизу */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  z-index: 0;
+  pointer-events: none;
+}
+
+body::before {
+  top: -90px;
+  left: -90px;
+  width: 280px;
+  height: 280px;
+  border: 4px solid var(--ink);
+  border-radius: 50%;
+  background:
+    repeating-linear-gradient(-45deg, transparent 0 10px, rgba(26, 11, 46, 0.16) 10px 13px),
+    var(--yellow);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+body::after {
+  right: 4vw;
+  bottom: 6vh;
+  width: 120px;
+  height: 120px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50 3 58.5 41.5 97 50 58.5 58.5 50 97 41.5 58.5 3 50 41.5 41.5' fill='%233DF5E0' stroke='%231A0B2E' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  animation: twinkle 3.2s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50%      { transform: rotate(45deg) scale(0.82); }
+}
+
+/* ===== Карточка игры ===== */
+.game {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 36px 32px;
+  border: 4px solid var(--ink);
+  border-radius: 32px;
+  background-color: var(--paper);
+  box-shadow: var(--shadow-l);
+}
+
+/* Вращающийся «взрыв» на углу */
+.game::before {
+  content: "";
+  position: absolute;
+  top: -54px;
+  right: -46px;
+  width: 128px;
+  height: 128px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50 3 58 14.9 70.4 7.7 72.4 21.9 86.7 20.7 82.4 34.4 95.8 39.5 86 50 95.8 60.5 82.4 65.6 86.7 79.3 72.4 78.1 70.4 92.3 58 85.1 50 97 42 85.1 29.6 92.3 27.6 78.1 13.3 79.3 17.6 65.6 4.2 60.5 14 50 4.2 39.5 17.6 34.4 13.3 20.7 27.6 21.9 29.6 7.7 42 14.9' fill='%23B7FF5C' stroke='%231A0B2E' stroke-width='2.5' stroke-linejoin='round'/%3E%3Ccircle cx='50' cy='50' r='16' fill='%23FF2E93' stroke='%231A0B2E' stroke-width='2.5'/%3E%3C/svg%3E") center / contain no-repeat;
+  animation: spin 22s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== Заголовок ===== */
+.game__header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.game__title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 48px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  word-spacing: 0.18em;
+  color: var(--paper);
+  -webkit-text-stroke: 2px var(--ink);
+  paint-order: stroke fill;
+  text-shadow:
+    3px 3px 0 var(--magenta),
+    6px 6px 0 var(--ink);
+  transform: rotate(-2deg);
+}
+
+.game__subtitle {
+  max-width: 30em;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+/* ===== Плитки с цифрами ===== */
+.tile {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: var(--border);
+  font-family: var(--font-digits);
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* ===== Табло: загаданное число + счётчик + кнопки ===== */
+.board {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  border: var(--border);
+  border-radius: 24px;
+  background-color: var(--ink);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1.4px, transparent 1.6px);
+  background-size: 18px 18px;
+}
+
+.secret {
+  display: flex;
+  gap: 10px;
+}
+
+.secret .tile {
+  width: 64px;
+  height: 78px;
+  border-color: var(--paper);
+  border-radius: 14px;
+  font-size: 40px;
+}
+
+.tile--hidden {
+  color: var(--ink);
+  background-color: var(--yellow);
+  box-shadow: 4px 4px 0 var(--magenta);
+}
+
+.secret .tile--hidden:nth-child(even) {
+  background-color: var(--cyan);
+  transform: rotate(3deg);
+}
+
+.secret .tile--hidden:nth-child(odd) {
+  transform: rotate(-2deg);
+}
+
+/* Подсмотренное число — пунктирные белые плитки */
+.secret.is-peeking .tile--open {
+  color: var(--paper);
+  border-style: dashed;
+  background-color: transparent;
+}
+
+/* Победа: плитки переворачиваются по очереди и становятся лаймовыми */
+.secret.is-won .tile--open {
+  color: var(--ink);
+  background-color: var(--lime);
+  box-shadow: 4px 4px 0 var(--magenta);
+  animation: flip 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.secret.is-won .tile:nth-child(2) { animation-delay: 0.1s; }
+.secret.is-won .tile:nth-child(3) { animation-delay: 0.2s; }
+.secret.is-won .tile:nth-child(4) { animation-delay: 0.3s; }
+
+@keyframes flip {
+  from { transform: rotateY(90deg) scale(0.8); }
+  to   { transform: rotateY(0deg) scale(1); }
+}
+
+.board__side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.counter {
+  padding: 6px 16px;
+  border: var(--border);
+  border-color: var(--paper);
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  background-color: var(--pink);
+  transform: rotate(2deg);
+}
+
+.board__buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+}
+
+.board__side {
+  min-width: 180px;
+}
+
+/* ===== Кнопки ===== */
+.button {
+  min-height: 48px;
+  padding: 0 20px;
+  border: var(--border);
+  border-radius: 16px;
+  font-weight: 800;
+  font-size: 16px;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease, color 0.12s ease;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+}
+
+.button--new {
+  color: var(--ink);
+  background-color: var(--yellow);
+  border-color: var(--paper);
+  box-shadow: 4px 4px 0 var(--magenta);
+}
+
+.button--new:hover {
+  background-color: var(--lime);
+  transform: translate(-2px, -2px) rotate(-2deg);
+  box-shadow: 6px 6px 0 var(--magenta);
+}
+
+.button--new:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--magenta);
+}
+
+.button--ghost {
+  color: var(--paper);
+  background-color: transparent;
+  border-color: var(--paper);
+  border-style: dashed;
+}
+
+.button--ghost:hover:not(:disabled) {
+  color: var(--ink);
+  background-color: var(--cyan);
+  border-style: solid;
+}
+
+.button--ghost:disabled {
+  opacity: 0.35;
+}
+
+.board :focus-visible {
+  outline-color: var(--yellow);
+}
+
+/* ===== Форма попытки ===== */
+.guess-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.guess-form__label {
+  font-weight: 800;
+  font-size: 17px;
+}
+
+.guess-form__row {
+  display: flex;
+  gap: 12px;
+}
+
+.guess-form__input {
+  flex: 1;
+  min-width: 0;
+  min-height: 68px;
+  padding: 8px 18px;
+  border: var(--border);
+  border-radius: 18px;
+  font-family: var(--font-digits);
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: 0.45em;
+  text-align: center;
+  background-color: #F3EDFF;
+  box-shadow: var(--shadow-s);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.guess-form__input::placeholder {
+  color: #B6ABCC;
+}
+
+.guess-form__input:hover:not(:disabled) {
+  background-color: #EAE0FF;
+}
+
+.guess-form__input:focus {
+  outline: none;
+  background-color: var(--paper);
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--violet), 8px 8px 0 var(--ink);
+}
+
+.guess-form__input.is-invalid {
+  background-color: #FFE8EF;
+  box-shadow: 5px 5px 0 var(--red), 8px 8px 0 var(--ink);
+}
+
+.guess-form__input:disabled {
+  cursor: not-allowed;
+  background-color: #EEEAF3;
+  background-image: repeating-linear-gradient(-45deg, transparent 0 9px, rgba(26, 11, 46, 0.07) 9px 12px);
+  box-shadow: none;
+}
+
+.button--check {
+  flex-shrink: 0;
+  min-height: 68px;
+  padding: 0 28px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 18px;
+  color: var(--paper);
+  background-color: var(--magenta);
+  box-shadow: var(--shadow-m);
+}
+
+.button--check:hover:not(:disabled) {
+  background-color: var(--violet);
+  transform: translate(-2px, -2px) rotate(-1.5deg);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+.button--check:active:not(:disabled) {
+  transform: translate(4px, 4px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.button--check:disabled {
+  color: #8A8197;
+  background-color: #E4DFEA;
+  box-shadow: none;
+}
+
+.shake {
+  animation: shake 0.35s ease;
+}
+
+@keyframes shake {
+  20% { transform: translateX(-8px) rotate(-1deg); }
+  40% { transform: translateX(7px) rotate(1deg); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(3px); }
+}
+
+/* ===== Сообщения: ошибка и победа ===== */
+.message:empty {
+  display: none;
+}
+
+.message {
+  align-self: flex-start;
+  margin-top: -8px;
+  padding: 8px 16px;
+  border: var(--border);
+  border-radius: 14px;
+  font-weight: 800;
+  box-shadow: var(--shadow-s);
+}
+
+.message--error {
+  background-color: var(--pink);
+  transform: rotate(-1deg);
+}
+
+.message--win {
+  align-self: stretch;
+  padding: 18px 22px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 26px;
+  line-height: 1.15;
+  text-align: center;
+  background-color: var(--lime);
+  box-shadow: 6px 6px 0 var(--magenta), 9px 9px 0 var(--ink);
+  animation: win-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.35s both;
+}
+
+@keyframes win-pop {
+  from { opacity: 0; transform: scale(0.6) rotate(-6deg); }
+  to   { opacity: 1; transform: scale(1) rotate(-1deg); }
+}
+
+/* ===== История ===== */
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 20px;
+  border-top: 3px dashed var(--ink);
+}
+
+.history__title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 24px;
+}
+
+.history__list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.history__empty {
+  padding: 18px;
+  border: 3px dashed var(--ink);
+  border-radius: 18px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.history__empty[hidden] {
+  display: none;
+}
+
+/* Строка истории — цветная наклейка */
+.attempt {
+  --sticker: var(--yellow);
+  --tilt: -0.5deg;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+  padding: 10px 16px;
+  border: var(--border);
+  border-radius: 18px;
+  background-color: var(--sticker);
+  box-shadow: 4px 4px 0 var(--ink);
+  transform: rotate(var(--tilt));
+}
+
+.attempt:nth-child(4n + 2) { --sticker: var(--cyan); --tilt: 0.4deg; }
+.attempt:nth-child(4n + 3) { --sticker: var(--pink); --tilt: -0.3deg; }
+.attempt:nth-child(4n + 4) { --sticker: var(--paper); --tilt: 0.6deg; }
+
+.attempt--win,
+.attempt--win:nth-child(n) {
+  --sticker: var(--lime);
+  box-shadow: 4px 4px 0 var(--magenta), 7px 7px 0 var(--ink);
+}
+
+.attempt.is-new {
+  animation: pop-in 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.85) rotate(-4deg);
+  }
+}
+
+.attempt__number {
+  min-width: 44px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 14px;
+  text-align: center;
+  color: var(--yellow);
+  background-color: var(--ink);
+}
+
+.attempt__digits {
+  display: flex;
+  gap: 4px;
+}
+
+.tile--small {
+  width: 34px;
+  height: 40px;
+  border-radius: 9px;
+  font-size: 22px;
+  background-color: var(--paper);
+}
+
+.attempt__outcome {
+  flex: 1;
+  min-width: 190px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.attempt__arrow {
+  font-weight: 900;
+  font-size: 20px;
+  white-space: pre;
+}
+
+.attempt__result {
+  font-weight: 800;
+  font-size: 17px;
+}
+
+/* Колышки: быки — малиновые, коровы — бирюзовые, промахи — пустые */
+.pegs {
+  display: flex;
+  gap: 5px;
+}
+
+.peg {
+  width: 16px;
+  height: 16px;
+  border: 2.5px solid var(--ink);
+  border-radius: 50%;
+  background-color: var(--paper);
+}
+
+.peg--bull { background-color: var(--magenta); }
+.peg--cow  { background-color: var(--cyan); }
+
+/* ===== Правила ===== */
+.rules {
+  border: var(--border);
+  border-radius: 18px;
+  background-color: #F3EDFF;
+}
+
+.rules__summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 18px;
+  font-weight: 800;
+  cursor: pointer;
+  list-style: none;
+}
+
+.rules__summary::-webkit-details-marker {
+  display: none;
+}
+
+.rules__summary::before {
+  content: "+";
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 26px;
+  height: 26px;
+  border: 2.5px solid var(--ink);
+  border-radius: 50%;
+  font-weight: 900;
+  line-height: 1;
+  background-color: var(--yellow);
+  transition: transform 0.2s ease;
+}
+
+.rules[open] .rules__summary::before {
+  transform: rotate(45deg);
+}
+
+.rules__body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 18px 18px;
+}
+
+.rules code {
+  padding: 1px 6px;
+  border-radius: 6px;
+  font-family: var(--font-digits);
+  font-weight: 800;
+  background-color: var(--yellow);
+}
+
+/* ===== Конфетти ===== */
+.confetti {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti__piece {
+  position: absolute;
+  top: -24px;
+  left: var(--x);
+  width: 12px;
+  height: 18px;
+  border: 2px solid var(--ink);
+  background-color: var(--color);
+  animation: fall var(--duration) cubic-bezier(0.25, 0.6, 0.4, 1) var(--delay) forwards;
+}
+
+.confetti__piece--round {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+
+@keyframes fall {
+  to {
+    transform: translate(var(--drift), 110vh) rotate(var(--spin));
+  }
+}
+
+/* ===== Средние экраны ===== */
+@media (max-width: 800px) {
+  .game::before {
+    right: -10px;
+  }
+}
+
+/* ===== Телефоны ===== */
+@media (max-width: 560px) {
+  body {
+    padding: 48px 12px 48px;
+  }
+
+  body::before {
+    width: 180px;
+    height: 180px;
+    top: -70px;
+    left: -70px;
+  }
+
+  body::after {
+    width: 72px;
+    height: 72px;
+  }
+
+  .game {
+    gap: 20px;
+    padding: 28px 16px 20px;
+    border-radius: 24px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  .game::before {
+    top: -40px;
+    right: -4px;
+    width: 76px;
+    height: 76px;
+  }
+
+  .game__title {
+    font-size: 29px;
+  }
+
+  .board {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px;
+  }
+
+  .secret {
+    justify-content: center;
+  }
+
+  .secret .tile {
+    width: 56px;
+    height: 68px;
+    font-size: 34px;
+  }
+
+  .board__side {
+    align-items: stretch;
+  }
+
+  .counter {
+    align-self: center;
+  }
+
+  .board__buttons {
+    flex-direction: row;
+  }
+
+  .board__buttons .button {
+    flex: 1 1 auto;
+    padding: 0 12px;
+    font-size: 15px;
+    white-space: nowrap;
+  }
+
+  .guess-form__row {
+    flex-direction: column;
+  }
+
+  .button--check {
+    min-height: 56px;
+  }
+
+  .message--win {
+    font-size: 21px;
+  }
+
+  .attempt {
+    padding: 10px 12px;
+  }
+
+  .attempt__outcome {
+    min-width: 0;
+  }
+
+  .attempt__result {
+    font-size: 15px;
+  }
+}
+
+/* ===== Для тех, кто отключил анимации ===== */
+@media (prefers-reduced-motion: reduce) {
+  body,
+  body::after,
+  .game::before,
+  .shake,
+  .attempt.is-new,
+  .secret.is-won .tile--open,
+  .message--win {
+    animation: none;
+  }
+}

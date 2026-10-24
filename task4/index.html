@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Быки и коровы</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+  <main class="game">
+    <header class="game__header">
+      <h1 class="game__title">Быки и коровы</h1>
+      <p class="game__subtitle">Компьютер загадал число из четырёх разных цифр. Угадайте его.</p>
+    </header>
+
+    <!-- Загаданное число, счётчик и управление игрой -->
+    <section class="board" aria-label="Состояние игры">
+      <div class="secret" id="secret" aria-live="polite"></div>
+      <div class="board__side">
+        <p class="counter" id="counter"></p>
+        <div class="board__buttons">
+          <button class="button button--new" id="new-game" type="button">Новая игра</button>
+          <button class="button button--ghost" id="peek" type="button" aria-pressed="false"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ввод попытки: и кнопка «Проверить», и Enter вызывают submit -->
+    <form class="guess-form" id="guess-form" novalidate>
+      <label class="guess-form__label" for="guess-input">Ваша попытка</label>
+      <div class="guess-form__row">
+        <input class="guess-form__input" id="guess-input" type="text" inputmode="numeric"
+               autocomplete="off" placeholder="1234" aria-describedby="message">
+        <button class="button button--check" id="check" type="submit">Проверить</button>
+      </div>
+    </form>
+    <p class="message" id="message" aria-live="assertive"></p>
+
+    <!-- История попыток: строки создаёт script.js из массива state.attempts -->
+    <section class="history" aria-labelledby="history-title">
+      <h2 class="history__title" id="history-title">История</h2>
+      <ol class="history__list" id="history"></ol>
+      <p class="history__empty" id="history-empty">Попыток пока не было. Введите первое число.</p>
+    </section>
+
+    <details class="rules">
+      <summary class="rules__summary">Как играть</summary>
+      <div class="rules__body">
+        <p>Компьютер загадывает число из 4 неповторяющихся цифр от 0 до 9. Ноль может стоять первым.</p>
+        <p>После каждой попытки вы узнаёте, сколько в ней <b>быков</b> (цифра есть и стоит на своём месте) и <b>коров</b> (цифра есть, но на другом месте).</p>
+        <p>Например, загадано <code>4271</code>, вы ввели <code>1234</code>: двойка на своём месте — это 1 бык, а единица и четвёрка есть в числе, но не на своих местах — это 2 коровы.</p>
+        <p>Четыре быка — победа.</p>
+      </div>
+    </details>
+  </main>
+
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+
+</body>
+</html>
