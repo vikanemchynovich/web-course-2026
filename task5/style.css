@@ -1,0 +1,600 @@
+/* =========================================================
+   Саймон — в общем стиле лабораторных №3–4
+   Кислотный градиент, точечный растр, толстые обводки,
+   жёсткие тени. Поле — круг из четырёх секторов.
+   ========================================================= */
+
+:root {
+  --ink: #1A0B2E;
+  --paper: #FFFFFF;
+  --violet: #6A11FF;
+  --magenta: #FF2E93;
+  --orange: #FF8A00;
+  --yellow: #FFE600;
+  --cyan: #3DF5E0;
+  --lime: #B7FF5C;
+  --pink: #FF9AD5;
+
+  --border: 3px solid var(--ink);
+  --shadow-s: 3px 3px 0 var(--ink);
+  --shadow-m: 5px 5px 0 var(--ink);
+  --shadow-l: 10px 10px 0 var(--ink);
+
+  --font-display: "Arial Black", "Segoe UI Black", "Helvetica Neue", system-ui, sans-serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+
+  --board-size: min(460px, 84vw);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* overflow на html уходит на окно, а body обрезает вращающиеся украшения сам */
+html {
+  overflow-x: clip;
+}
+
+h1, p, ol {
+  margin: 0;
+}
+
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 3px dashed var(--ink);
+  outline-offset: 3px;
+}
+
+/* ===== Фон ===== */
+body {
+  position: relative;
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: clip;
+  padding: 64px 20px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--ink);
+  background-color: var(--violet);
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.28) 1.4px, transparent 1.6px),
+    linear-gradient(125deg, var(--violet) 0%, var(--magenta) 48%, var(--orange) 100%);
+  background-size: 22px 22px, 220% 220%;
+  background-attachment: fixed;
+  animation: drift 16s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from { background-position: 0 0, 0% 30%; }
+  to   { background-position: 0 0, 100% 70%; }
+}
+
+/* Лаймовый круг в полоску справа сверху и жёлтая искра слева снизу */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  z-index: 0;
+  pointer-events: none;
+}
+
+body::before {
+  top: -90px;
+  right: -90px;
+  width: 280px;
+  height: 280px;
+  border: 4px solid var(--ink);
+  border-radius: 50%;
+  background:
+    repeating-linear-gradient(45deg, transparent 0 10px, rgba(26, 11, 46, 0.16) 10px 13px),
+    var(--lime);
+  box-shadow: -8px 8px 0 var(--ink);
+}
+
+body::after {
+  left: 4vw;
+  bottom: 6vh;
+  width: 120px;
+  height: 120px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50 3 58.5 41.5 97 50 58.5 58.5 50 97 41.5 58.5 3 50 41.5 41.5' fill='%23FFE600' stroke='%231A0B2E' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  animation: twinkle 3.2s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50%      { transform: rotate(45deg) scale(0.82); }
+}
+
+/* ===== Карточка ===== */
+.simon {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 40px 36px 32px;
+  border: 4px solid var(--ink);
+  border-radius: 32px;
+  background-color: var(--paper);
+  box-shadow: var(--shadow-l);
+}
+
+/* Вращающийся «взрыв» на левом верхнем углу */
+.simon::before {
+  content: "";
+  position: absolute;
+  top: -54px;
+  left: -46px;
+  width: 128px;
+  height: 128px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50 3 58 14.9 70.4 7.7 72.4 21.9 86.7 20.7 82.4 34.4 95.8 39.5 86 50 95.8 60.5 82.4 65.6 86.7 79.3 72.4 78.1 70.4 92.3 58 85.1 50 97 42 85.1 29.6 92.3 27.6 78.1 13.3 79.3 17.6 65.6 4.2 60.5 14 50 4.2 39.5 17.6 34.4 13.3 20.7 27.6 21.9 29.6 7.7 42 14.9' fill='%233DF5E0' stroke='%231A0B2E' stroke-width='2.5' stroke-linejoin='round'/%3E%3Ccircle cx='50' cy='50' r='16' fill='%23FFE600' stroke='%231A0B2E' stroke-width='2.5'/%3E%3C/svg%3E") center / contain no-repeat;
+  animation: spin 22s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== Заголовок ===== */
+.simon__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.simon__title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 56px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--paper);
+  -webkit-text-stroke: 2px var(--ink);
+  paint-order: stroke fill;
+  text-shadow:
+    3px 3px 0 var(--magenta),
+    6px 6px 0 var(--ink);
+  transform: rotate(-2deg);
+}
+
+.simon__subtitle {
+  max-width: 28em;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+/* ===== Табло ===== */
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.stat {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 16px;
+  border: var(--border);
+  border-radius: 999px;
+  font-weight: 800;
+  box-shadow: var(--shadow-s);
+}
+
+.stat--level {
+  background-color: var(--yellow);
+  transform: rotate(-2deg);
+}
+
+.stat--best {
+  background-color: var(--pink);
+  transform: rotate(1.5deg);
+}
+
+.stat__value {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+}
+
+.sound-toggle {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 3px dashed var(--ink);
+  border-radius: 999px;
+  font-weight: 800;
+  background-color: var(--paper);
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.sound-toggle:hover {
+  border-style: solid;
+  background-color: var(--cyan);
+  transform: rotate(-3deg);
+}
+
+.sound-toggle[aria-pressed="false"] {
+  color: #6E6480;
+  text-decoration: line-through;
+}
+
+/* ===== Игровое поле: сетка 2×2, обрезанная в круг ===== */
+.board {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 14px;
+  width: var(--board-size);
+  aspect-ratio: 1;
+  padding: 14px;
+  border: 5px solid var(--ink);
+  border-radius: 50%;
+  background-color: var(--ink);
+  box-shadow: 12px 12px 0 var(--magenta), 16px 16px 0 var(--ink);
+}
+
+.pad {
+  --color: var(--yellow);
+  --glow: rgba(255, 230, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  border: 4px solid var(--paper);
+  background-color: var(--color);
+  cursor: default;
+  /* В покое сектор приглушён — так вспышка заметнее */
+  filter: saturate(0.8) brightness(0.8);
+  transition: filter 0.12s ease, transform 0.12s ease, box-shadow 0.12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Каждый сектор — четверть круга: скруглён внешний угол */
+.pad:nth-of-type(1) { border-radius: 100% 14px 14px 14px; }
+.pad:nth-of-type(2) { border-radius: 14px 100% 14px 14px; }
+.pad:nth-of-type(3) { border-radius: 14px 14px 14px 100%; }
+.pad:nth-of-type(4) { border-radius: 14px 14px 100% 14px; }
+
+.pad--magenta { --color: var(--magenta); --glow: rgba(255, 46, 147, 0.8); }
+.pad--cyan    { --color: var(--cyan);    --glow: rgba(61, 245, 224, 0.8); }
+.pad--yellow  { --color: var(--yellow);  --glow: rgba(255, 230, 0, 0.8); }
+.pad--lime    { --color: var(--lime);    --glow: rgba(183, 255, 92, 0.8); }
+
+/* Значок смещён к внешнему краю сектора, подальше от центрального табло */
+.pad__icon {
+  width: 26%;
+  height: 26%;
+  fill: var(--paper);
+  stroke: var(--ink);
+  stroke-width: 3;
+  stroke-linejoin: round;
+  opacity: 0.85;
+}
+
+.pad:nth-of-type(1) .pad__icon { transform: translate(-28%, -28%); }
+.pad:nth-of-type(2) .pad__icon { transform: translate(28%, -28%); }
+.pad:nth-of-type(3) .pad__icon { transform: translate(-28%, 28%); }
+.pad:nth-of-type(4) .pad__icon { transform: translate(28%, 28%); }
+
+/* Ход игрока: сектора кликабельны и откликаются на наведение */
+.board.is-input .pad {
+  cursor: pointer;
+}
+
+.board.is-input .pad:hover {
+  filter: saturate(0.95) brightness(0.92);
+}
+
+/* Подсветка — класс .active (его ставит render() по state.litPad) */
+.pad.active,
+.board.is-input .pad.active {
+  filter: saturate(1.1) brightness(1.08);
+  transform: scale(1.035);
+  box-shadow:
+    inset 0 0 0 6px rgba(255, 255, 255, 0.9),
+    0 0 36px 10px var(--glow);
+  z-index: 1;
+}
+
+.pad.active .pad__icon {
+  opacity: 1;
+}
+
+.pad:focus-visible {
+  outline: 4px dashed var(--yellow);
+  outline-offset: -12px;
+}
+
+/* Игра окончена: всё поле тускнеет и встряхивается */
+.board.is-over {
+  animation: board-shake 0.45s ease;
+}
+
+.board.is-over .pad:not(.active) {
+  filter: grayscale(0.7) brightness(0.6);
+}
+
+@keyframes board-shake {
+  20% { transform: translateX(-10px) rotate(-1.5deg); }
+  40% { transform: translateX(9px) rotate(1.5deg); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(3px); }
+}
+
+/* ===== Центр поля: уровень и «Старт» ===== */
+.hub {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  width: 42%;
+  aspect-ratio: 1;
+  border: 5px solid var(--ink);
+  border-radius: 50%;
+  background-color: var(--paper);
+  background-image: radial-gradient(rgba(26, 11, 46, 0.08) 1.2px, transparent 1.4px);
+  background-size: 12px 12px;
+  box-shadow: 0 0 0 8px var(--ink);
+  transform: translate(-50%, -50%);
+}
+
+.hub__label {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.hub__level {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(36px, 9vw, 54px);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--paper);
+  -webkit-text-stroke: 2px var(--ink);
+  paint-order: stroke fill;
+  text-shadow: 3px 3px 0 var(--magenta), 5px 5px 0 var(--ink);
+}
+
+.start {
+  min-height: 44px;
+  margin-top: 6px;
+  padding: 0 20px;
+  border: var(--border);
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 16px;
+  color: var(--ink);
+  background-color: var(--yellow);
+  box-shadow: var(--shadow-s);
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+}
+
+.start:hover {
+  background-color: var(--lime);
+  transform: translate(-2px, -2px) rotate(-3deg);
+  box-shadow: var(--shadow-m);
+}
+
+.start:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+/* ===== Статус и прогресс ===== */
+.status {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 8px 20px;
+  border: var(--border);
+  border-radius: 16px;
+  font-weight: 800;
+  font-size: 18px;
+  text-align: center;
+  background-color: #F3EDFF;
+  box-shadow: var(--shadow-s);
+}
+
+.status--over {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 24px;
+  background-color: var(--pink);
+  box-shadow: 5px 5px 0 var(--magenta), 8px 8px 0 var(--ink);
+  transform: rotate(-1.5deg);
+  animation: pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes pop {
+  from { transform: scale(0.6) rotate(-6deg); opacity: 0; }
+}
+
+.progress {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  max-width: 420px;
+  min-height: 16px;
+}
+
+.progress__dot {
+  width: 16px;
+  height: 16px;
+  border: 2.5px solid var(--ink);
+  border-radius: 50%;
+  background-color: var(--paper);
+  transition: background-color 0.12s ease, transform 0.12s ease;
+}
+
+.progress__dot.is-done    { background-color: var(--lime); }
+.progress__dot.is-current { background-color: var(--yellow); transform: scale(1.3); }
+.progress__dot.is-failed  { background-color: var(--magenta); transform: scale(1.3); }
+
+/* ===== Правила ===== */
+.rules {
+  align-self: stretch;
+  border: var(--border);
+  border-radius: 18px;
+  background-color: #F3EDFF;
+}
+
+.rules__summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 18px;
+  font-weight: 800;
+  cursor: pointer;
+  list-style: none;
+}
+
+.rules__summary::-webkit-details-marker {
+  display: none;
+}
+
+.rules__summary::before {
+  content: "+";
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 26px;
+  height: 26px;
+  border: 2.5px solid var(--ink);
+  border-radius: 50%;
+  font-weight: 900;
+  line-height: 1;
+  background-color: var(--yellow);
+  transition: transform 0.2s ease;
+}
+
+.rules[open] .rules__summary::before {
+  transform: rotate(45deg);
+}
+
+.rules__body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 18px 18px;
+}
+
+/* ===== Средние экраны ===== */
+@media (max-width: 800px) {
+  .simon::before {
+    left: -10px;
+  }
+}
+
+/* ===== Телефоны ===== */
+@media (max-width: 560px) {
+  body {
+    padding: 48px 12px;
+  }
+
+  body::before {
+    width: 180px;
+    height: 180px;
+    top: -70px;
+    right: -70px;
+  }
+
+  body::after {
+    width: 72px;
+    height: 72px;
+  }
+
+  .simon {
+    gap: 20px;
+    padding: 32px 14px 20px;
+    border-radius: 24px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  .simon::before {
+    top: -40px;
+    left: -4px;
+    width: 80px;
+    height: 80px;
+  }
+
+  .simon__title {
+    font-size: 42px;
+  }
+
+  .board {
+    gap: 10px;
+    padding: 10px;
+    box-shadow: 7px 7px 0 var(--magenta), 10px 10px 0 var(--ink);
+  }
+
+  .pad {
+    border-width: 3px;
+  }
+
+  .hub {
+    border-width: 4px;
+    box-shadow: 0 0 0 6px var(--ink);
+  }
+
+  .hub__label {
+    font-size: 11px;
+  }
+
+  .start {
+    min-height: 44px;
+    padding: 0 14px;
+    font-size: 14px;
+  }
+
+  .status {
+    font-size: 16px;
+  }
+
+  .status--over {
+    font-size: 20px;
+  }
+}
+
+/* ===== Для тех, кто отключил анимации ===== */
+@media (prefers-reduced-motion: reduce) {
+  body,
+  body::after,
+  .simon::before,
+  .board.is-over,
+  .status--over {
+    animation: none;
+  }
+
+  .pad.active {
+    transform: none;
+  }
+}

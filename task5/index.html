@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Саймон</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+  <main class="simon">
+    <header class="simon__header">
+      <h1 class="simon__title">Саймон</h1>
+      <p class="simon__subtitle">Запомните, в каком порядке загораются кнопки, и повторите. Каждый раунд — на шаг длиннее.</p>
+    </header>
+
+    <div class="stats">
+      <p class="stat stat--level">Уровень <span class="stat__value" id="level-stat">0</span></p>
+      <p class="stat stat--best">Рекорд <span class="stat__value" id="best-stat">0</span></p>
+      <button class="sound-toggle" id="sound-toggle" type="button" aria-pressed="true">Звук: вкл</button>
+    </div>
+
+    <!-- Игровое поле: 4 сектора складываются в круг, в центре — табло и «Старт» -->
+    <div class="board" id="board">
+      <button class="pad pad--magenta" type="button" data-pad="0" aria-label="Малиновая кнопка, звезда">
+        <svg class="pad__icon" viewBox="0 0 40 40" aria-hidden="true"><polygon points="20 3 25 15 38 15 27.5 23 31.5 36 20 28 8.5 36 12.5 23 2 15 15 15"/></svg>
+      </button>
+      <button class="pad pad--cyan" type="button" data-pad="1" aria-label="Бирюзовая кнопка, круг">
+        <svg class="pad__icon" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="15"/></svg>
+      </button>
+      <button class="pad pad--yellow" type="button" data-pad="2" aria-label="Жёлтая кнопка, треугольник">
+        <svg class="pad__icon" viewBox="0 0 40 40" aria-hidden="true"><polygon points="20 4 37 35 3 35"/></svg>
+      </button>
+      <button class="pad pad--lime" type="button" data-pad="3" aria-label="Лаймовая кнопка, квадрат">
+        <svg class="pad__icon" viewBox="0 0 40 40" aria-hidden="true"><rect x="6" y="6" width="28" height="28" rx="4"/></svg>
+      </button>
+
+      <div class="hub">
+        <p class="hub__label">Уровень</p>
+        <p class="hub__level" id="level">0</p>
+        <button class="start" id="start" type="button">Старт</button>
+      </div>
+    </div>
+
+    <p class="status" id="status" aria-live="polite"></p>
+    <ol class="progress" id="progress" aria-hidden="true"></ol>
+
+    <details class="rules">
+      <summary class="rules__summary">Как играть</summary>
+      <div class="rules__body">
+        <p>Нажмите «Старт». Компьютер подсветит одну кнопку — нажмите её же.</p>
+        <p>Каждый следующий раунд к последовательности добавляется ещё одна кнопка, и она показывается целиком с самого начала.</p>
+        <p>Пока компьютер показывает последовательность, нажатия не засчитываются. Одна ошибка — и игра окончена.</p>
+      </div>
+    </details>
+  </main>
+
+</body>
+</html>
