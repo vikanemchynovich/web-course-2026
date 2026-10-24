@@ -1,32 +1,38 @@
-/* ===== Токены ===== */
+/* =========================================================
+   Список задач — яркая версия
+   Необрутализм: кислотный градиент, точечный растр,
+   толстые обводки, жёсткие смещённые тени, задачи-наклейки.
+   ========================================================= */
+
 :root {
-  --bg: #EDEFF3;
-  --surface: #FFFFFF;
-  --text: #1B1F27;
-  --muted: #5B6271;
-  --line: #DDE1E8;
-  --accent: #2F55D4;
-  --accent-dark: #2443AB;
-  --accent-soft: #E6ECFC;
-  --danger: #C2342B;
-  --danger-soft: #FCE9E7;
-  --done: #2E8A57;
-  --radius: 12px;
+  --ink: #1A0B2E;            /* обводки и тени — глубокий фиолетово-чёрный */
+  --paper: #FFFFFF;
+  --violet: #6A11FF;
+  --magenta: #FF2E93;
+  --orange: #FF8A00;
+  --yellow: #FFE600;
+  --cyan: #3DF5E0;
+  --lime: #B7FF5C;
+  --pink: #FF9AD5;
+  --red: #FF3B30;
+
+  --border: 3px solid var(--ink);
+  --shadow-s: 3px 3px 0 var(--ink);
+  --shadow-m: 5px 5px 0 var(--ink);
+  --shadow-l: 10px 10px 0 var(--ink);
+
+  --font-display: "Arial Black", "Segoe UI Black", "Helvetica Neue", system-ui, sans-serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 * {
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  padding: 48px 16px;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 1.5;
-  color: var(--text);
-  background-color: var(--bg);
+/* overflow на html уходит на окно, а body тогда обрезает украшения сам —
+   поэтому вращающиеся фигуры не дают горизонтального скролла */
+html {
+  overflow-x: clip;
 }
 
 h1, p, ul {
@@ -44,8 +50,8 @@ button, input {
 }
 
 :focus-visible {
-  outline: 3px solid var(--accent);
-  outline-offset: 2px;
+  outline: 3px dashed var(--ink);
+  outline-offset: 3px;
 }
 
 .visually-hidden {
@@ -59,91 +65,226 @@ button, input {
   border: 0;
 }
 
-/* ===== Карточка приложения ===== */
-.app {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 28px 24px 24px;
-  border-radius: 20px;
-  background-color: var(--surface);
-  box-shadow: 0 1px 2px rgba(27, 31, 39, 0.06), 0 12px 32px rgba(27, 31, 39, 0.08);
+/* ===== Фон: переливающийся градиент + точечный растр ===== */
+body {
+  position: relative;
+  margin: 0;
+  min-height: 100vh;
+  overflow-x: clip;          /* вращающиеся украшения не создают горизонтальный скролл */
+  padding: 72px 20px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--ink);
+  background-color: var(--violet);
+  background-image:
+    radial-gradient(rgba(255, 255, 255, 0.28) 1.4px, transparent 1.6px),
+    linear-gradient(125deg, var(--violet) 0%, var(--magenta) 48%, var(--orange) 100%);
+  background-size: 22px 22px, 220% 220%;
+  background-attachment: fixed;
+  animation: drift 16s ease-in-out infinite alternate;
 }
 
+@keyframes drift {
+  from { background-position: 0 0, 0% 30%; }
+  to   { background-position: 0 0, 100% 70%; }
+}
+
+/* Декоративные фигуры на фоне */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Большой бирюзовый круг слева сверху */
+body::before {
+  top: -90px;
+  left: -90px;
+  width: 280px;
+  height: 280px;
+  border: 4px solid var(--ink);
+  border-radius: 50%;
+  background:
+    repeating-linear-gradient(-45deg, transparent 0 10px, rgba(26, 11, 46, 0.18) 10px 13px),
+    var(--cyan);
+  box-shadow: 8px 8px 0 var(--ink);
+}
+
+/* Лаймовая искра справа снизу */
+body::after {
+  right: 4vw;
+  bottom: 6vh;
+  width: 120px;
+  height: 120px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50 3 58.5 41.5 97 50 58.5 58.5 50 97 41.5 58.5 3 50 41.5 41.5' fill='%23B7FF5C' stroke='%231A0B2E' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  animation: twinkle 3.2s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50%      { transform: rotate(45deg) scale(0.82); }
+}
+
+/* ===== Карточка приложения ===== */
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 36px 32px 32px;
+  border: 4px solid var(--ink);
+  border-radius: 32px;
+  background-color: var(--paper);
+  box-shadow: var(--shadow-l);
+}
+
+/* Вращающийся жёлтый «взрыв» на углу карточки */
+.app::before {
+  content: "";
+  position: absolute;
+  top: -52px;
+  right: -46px;
+  width: 128px;
+  height: 128px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50 3 58 14.9 70.4 7.7 72.4 21.9 86.7 20.7 82.4 34.4 95.8 39.5 86 50 95.8 60.5 82.4 65.6 86.7 79.3 72.4 78.1 70.4 92.3 58 85.1 50 97 42 85.1 29.6 92.3 27.6 78.1 13.3 79.3 17.6 65.6 4.2 60.5 14 50 4.2 39.5 17.6 34.4 13.3 20.7 27.6 21.9 29.6 7.7 42 14.9' fill='%23FFE600' stroke='%231A0B2E' stroke-width='2.5' stroke-linejoin='round'/%3E%3Ccircle cx='50' cy='50' r='16' fill='%23FF2E93' stroke='%231A0B2E' stroke-width='2.5'/%3E%3C/svg%3E") center / contain no-repeat;
+  animation: spin 22s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Розовая волна под карточкой */
+.app::after {
+  content: "";
+  position: absolute;
+  left: 28px;
+  bottom: -30px;
+  width: 150px;
+  height: 46px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 46'%3E%3Cpath d='M8 23 Q 23 3 38 23 T 68 23 T 98 23 T 128 23' fill='none' stroke='%231A0B2E' stroke-width='13' stroke-linecap='round'/%3E%3Cpath d='M8 23 Q 23 3 38 23 T 68 23 T 98 23 T 128 23' fill='none' stroke='%23FF9AD5' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  pointer-events: none;
+}
+
+/* ===== Заголовок: тяжёлый шрифт с многослойной тенью ===== */
 .app__title {
-  margin-bottom: 20px;
-  font-size: 28px;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
+  position: relative;
+  display: inline-block;
+  margin-bottom: 28px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 46px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  word-spacing: 0.18em;
+  color: var(--paper);
+  -webkit-text-stroke: 2px var(--ink);
+  paint-order: stroke fill;
+  text-shadow:
+    3px 3px 0 var(--magenta),
+    6px 6px 0 var(--ink);
+  transform: rotate(-2deg);
 }
 
 /* ===== Форма добавления ===== */
 .add-form {
   display: flex;
-  gap: 8px;
+  gap: 12px;
 }
 
 .add-form__input {
   flex: 1;
   min-width: 0;
-  min-height: 48px;
-  padding: 10px 14px;
-  border: 2px solid var(--line);
-  border-radius: var(--radius);
-  background-color: var(--surface);
-  transition: border-color 0.2s, box-shadow 0.2s;
+  min-height: 56px;
+  padding: 12px 18px;
+  border: var(--border);
+  border-radius: 18px;
+  font-size: 17px;
+  font-weight: 500;
+  background-color: #F3EDFF;
+  box-shadow: var(--shadow-s);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 
 .add-form__input::placeholder {
-  color: #7A8190;
+  color: #5E5375;
 }
 
 .add-form__input:hover {
-  border-color: #BFC6D2;
+  background-color: #EAE0FF;
 }
 
 .add-form__input:focus {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 4px var(--accent-soft);
+  background-color: var(--paper);
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--violet), 8px 8px 0 var(--ink);
 }
 
 .add-form__input.is-invalid {
-  border-color: var(--danger);
-  box-shadow: 0 0 0 4px var(--danger-soft);
+  background-color: #FFE8EF;
+  box-shadow: 5px 5px 0 var(--red), 8px 8px 0 var(--ink);
 }
 
 .add-form__button {
   flex-shrink: 0;
-  min-height: 48px;
-  padding: 0 20px;
-  border: 0;
-  border-radius: var(--radius);
-  font-weight: 600;
-  color: #FFFFFF;
-  background-color: var(--accent);
+  min-height: 56px;
+  padding: 0 24px;
+  border: var(--border);
+  border-radius: 18px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  background-color: var(--yellow);
+  box-shadow: var(--shadow-m);
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
 }
 
 .add-form__button:hover {
-  background-color: var(--accent-dark);
+  background-color: var(--lime);
+  transform: translate(-2px, -2px) rotate(-1.5deg);
+  box-shadow: 8px 8px 0 var(--ink);
 }
 
+.add-form__button:active {
+  transform: translate(4px, 4px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+/* Предупреждение — розовая наклейка */
 .add-form__error {
-  min-height: 24px;
-  margin-top: 6px;
-  font-size: 14px;
-  color: var(--danger);
+  min-height: 12px;
+  margin-top: 12px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.add-form__error:not(:empty) {
+  display: inline-block;
+  padding: 6px 14px;
+  border: var(--border);
+  border-radius: 12px;
+  background-color: var(--pink);
+  box-shadow: var(--shadow-s);
+  transform: rotate(-1deg);
 }
 
 .shake {
-  animation: shake 0.3s ease;
+  animation: shake 0.35s ease;
 }
 
 @keyframes shake {
-  25% { transform: translateX(-6px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-3px); }
+  20% { transform: translateX(-8px) rotate(-1deg); }
+  40% { transform: translateX(7px) rotate(1deg); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(3px); }
 }
 
 /* ===== Счётчик и фильтры ===== */
@@ -152,63 +293,101 @@ button, input {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  padding: 12px 0 16px;
-  border-bottom: 1px solid var(--line);
+  gap: 14px;
+  margin-top: 12px;
+  padding-bottom: 20px;
+  border-bottom: 3px dashed var(--ink);
 }
 
 .counter {
+  padding: 8px 14px;
+  border: var(--border);
+  border-radius: 999px;
+  font-weight: 800;
   font-size: 15px;
-  color: var(--muted);
   font-variant-numeric: tabular-nums;
+  background-color: var(--cyan);
+  box-shadow: var(--shadow-s);
 }
 
 .filters {
   display: flex;
   gap: 4px;
   padding: 4px;
-  border-radius: var(--radius);
-  background-color: var(--bg);
+  border: var(--border);
+  border-radius: 16px;
+  background-color: var(--paper);
+  box-shadow: var(--shadow-s);
 }
 
 .filters__button {
-  min-height: 40px;
+  min-height: 44px;
   padding: 0 14px;
   border: 0;
-  border-radius: 9px;
+  border-radius: 11px;
   font-size: 15px;
-  font-weight: 500;
-  color: var(--muted);
+  font-weight: 800;
   background-color: transparent;
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
 }
 
 .filters__button:hover {
-  color: var(--text);
+  background-color: var(--pink);
 }
 
 .filters__button.is-active {
-  color: var(--text);
-  background-color: var(--surface);
-  box-shadow: 0 1px 3px rgba(27, 31, 39, 0.12);
+  color: var(--yellow);
+  background-color: var(--ink);
+  transform: rotate(-2deg);
 }
 
-/* ===== Список задач ===== */
+/* ===== Список задач: цветные наклейки ===== */
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-top: 22px;
+}
+
+.task-list:empty {
+  padding-top: 0;
+}
+
 .task {
+  --sticker: var(--yellow);
+  --tilt: -0.6deg;
   display: flex;
   align-items: center;
-  gap: 8px;
-  border-bottom: 1px solid var(--line);
+  gap: 10px;
+  padding: 4px 8px 4px 16px;
+  border: var(--border);
+  border-radius: 18px;
+  background-color: var(--sticker);
+  box-shadow: 4px 4px 0 var(--ink);
+  transform: rotate(var(--tilt));
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
-/* Анимация только у только что добавленной задачи, а не у всего списка при каждой перерисовке */
+.task:nth-child(4n + 2) { --sticker: var(--cyan);  --tilt: 0.5deg; }
+.task:nth-child(4n + 3) { --sticker: var(--pink);  --tilt: -0.3deg; }
+.task:nth-child(4n + 4) { --sticker: var(--lime);  --tilt: 0.7deg; }
+
+.task:hover {
+  transform: rotate(0deg) translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--ink);
+}
+
+/* Новая задача влетает с отскоком */
 .task.is-new {
-  animation: appear 0.2s ease;
+  animation: pop-in 0.42s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-@keyframes appear {
-  from { opacity: 0; transform: translateY(-4px); }
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.85) rotate(-4deg);
+  }
 }
 
 .task__label {
@@ -216,46 +395,46 @@ button, input {
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: 12px;
-  min-height: 56px;
+  gap: 14px;
+  min-height: 60px;
   padding: 8px 0;
   cursor: pointer;
 }
 
-/* Свой чекбокс: квадрат со скруглением, при отметке — заливка и галочка */
+/* Чекбокс: круглая кнопка, при отметке — тёмная с жёлтой галочкой */
 .task__checkbox {
   appearance: none;
   flex-shrink: 0;
   display: grid;
   place-content: center;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   margin: 0;
-  border: 2px solid #AEB5C2;
-  border-radius: 7px;
-  background-color: var(--surface);
+  border: var(--border);
+  border-radius: 50%;
+  background-color: var(--paper);
+  box-shadow: 2px 2px 0 var(--ink);
   cursor: pointer;
-  transition: background-color 0.15s, border-color 0.15s;
+  transition: background-color 0.15s ease, transform 0.15s ease;
 }
 
 .task__checkbox::after {
   content: "";
-  width: 6px;
-  height: 11px;
-  margin-top: -2px;
-  border: solid #FFFFFF;
-  border-width: 0 2.5px 2.5px 0;
+  width: 7px;
+  height: 13px;
+  margin-top: -3px;
+  border: solid var(--yellow);
+  border-width: 0 3.5px 3.5px 0;
   transform: rotate(45deg) scale(0);
-  transition: transform 0.15s;
+  transition: transform 0.15s ease;
 }
 
 .task__label:hover .task__checkbox {
-  border-color: var(--done);
+  transform: scale(1.12) rotate(-8deg);
 }
 
 .task__checkbox:checked {
-  border-color: var(--done);
-  background-color: var(--done);
+  background-color: var(--ink);
 }
 
 .task__checkbox:checked::after {
@@ -263,49 +442,122 @@ button, input {
 }
 
 .task__text {
+  font-size: 17px;
+  font-weight: 700;
   overflow-wrap: anywhere;
-  transition: opacity 0.2s, color 0.2s;
 }
 
-/* Выполненная задача */
+/* Выполненная задача: наклейка «выцветает» в полоску, текст зачёркнут розовым маркером */
+.task.completed {
+  background-color: var(--paper);
+  background-image: repeating-linear-gradient(-45deg, transparent 0 9px, rgba(26, 11, 46, 0.07) 9px 12px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+
 .completed .task__text {
   text-decoration: line-through;
+  text-decoration-color: var(--magenta);
+  text-decoration-thickness: 4px;
   opacity: 0.6;
 }
 
 .task__delete {
   flex-shrink: 0;
   min-height: 44px;
-  padding: 0 12px;
-  border: 0;
-  border-radius: 9px;
+  padding: 0 16px;
+  border: var(--border);
+  border-radius: 999px;
   font-size: 14px;
-  font-weight: 500;
-  color: var(--muted);
-  background-color: transparent;
+  font-weight: 800;
+  color: var(--paper);
+  background-color: var(--ink);
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.15s ease, transform 0.15s ease;
 }
 
 .task__delete:hover {
-  color: var(--danger);
-  background-color: var(--danger-soft);
+  background-color: var(--red);
+  transform: rotate(-6deg) scale(1.06);
 }
 
+/* ===== Пустой список ===== */
 .empty {
-  padding: 32px 0 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 36px 12px 12px;
+  font-size: 18px;
+  font-weight: 800;
   text-align: center;
-  color: var(--muted);
+}
+
+.empty[hidden] {
+  display: none;
+}
+
+.empty::before {
+  content: "";
+  width: 72px;
+  height: 72px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpolygon points='50 3 58.5 41.5 97 50 58.5 58.5 50 97 41.5 58.5 3 50 41.5 41.5' fill='%233DF5E0' stroke='%231A0B2E' stroke-width='3.5' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  animation: twinkle 3.2s ease-in-out infinite;
+}
+
+/* ===== Средние экраны: «взрыв» не выходит за край окна ===== */
+@media (max-width: 760px) {
+  .app::before {
+    right: -10px;
+  }
 }
 
 /* ===== Узкие экраны ===== */
-@media (max-width: 480px) {
+@media (max-width: 520px) {
   body {
-    padding: 16px 12px;
+    padding: 48px 14px 56px;
+  }
+
+  body::before {
+    width: 180px;
+    height: 180px;
+    top: -70px;
+    left: -70px;
+  }
+
+  body::after {
+    width: 72px;
+    height: 72px;
   }
 
   .app {
-    padding: 20px 16px 16px;
+    padding: 28px 18px 22px;
+    border-radius: 24px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  .app::before {
+    top: -38px;
+    right: -4px;
+    width: 88px;
+    height: 88px;
+  }
+
+  .app__title {
+    font-size: 34px;
+  }
+
+  /* Поле — на всю ширину, кнопка — под ним */
+  .add-form {
+    flex-wrap: wrap;
+  }
+
+  .add-form__input {
+    flex-basis: 100%;
+  }
+
+  .add-form__button {
+    flex: 1 1 100%;
+    min-height: 52px;
   }
 
   .filters {
@@ -314,11 +566,35 @@ button, input {
 
   .filters__button {
     flex: 1;
-    padding: 0 8px;
+    padding: 0 6px;
+    font-size: 14px;
+  }
+
+  .task {
+    gap: 6px;
+    padding: 2px 6px 2px 12px;
+  }
+
+  .task__label {
+    gap: 10px;
+  }
+
+  .task__text {
+    font-size: 16px;
+  }
+
+  .task__delete {
+    padding: 0 12px;
+    font-size: 13px;
   }
 }
 
+/* ===== Для тех, кто отключил анимации ===== */
 @media (prefers-reduced-motion: reduce) {
+  body,
+  body::after,
+  .app::before,
+  .empty::before,
   .shake,
   .task.is-new {
     animation: none;
