@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Дзен-мани — учёт денег</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+  <!-- ES-модули: main.js сам импортирует api.js, ui.js и finance.js -->
+  <script type="module" src="main.js"></script>
+</head>
+<body>
+
+  <main class="app">
+    <header class="app__header">
+      <h1 class="app__title">Дзен-мани</h1>
+      <p class="app__subtitle">Доходы и расходы. Данные хранятся на json-server.</p>
+    </header>
+
+    <!-- Итоговая сводка -->
+    <section class="summary" aria-label="Итоги">
+      <p class="summary__card summary__card--income">
+        <span class="summary__label">Доходы</span>
+        <span class="summary__value" id="summary-income">—</span>
+      </p>
+      <p class="summary__card summary__card--expense">
+        <span class="summary__label">Расходы</span>
+        <span class="summary__value" id="summary-expense">—</span>
+      </p>
+      <p class="summary__card summary__card--balance" id="summary-balance-card">
+        <span class="summary__label">Баланс</span>
+        <span class="summary__value" id="summary-balance">—</span>
+      </p>
+    </section>
+
+    <div class="layout">
+      <!-- Форма: добавление и редактирование -->
+      <section class="panel panel--form" aria-labelledby="form-title">
+        <form class="form" id="transaction-form" novalidate>
+          <div class="form__head">
+            <h2 class="panel__title" id="form-title">Новая операция</h2>
+            <p class="form__editing-note" id="editing-note" hidden></p>
+          </div>
+
+          <fieldset class="field field--type">
+            <legend class="field__label">Тип</legend>
+            <div class="switch">
+              <input class="switch__input" type="radio" name="type" id="type-expense" value="expense" checked>
+              <label class="switch__option switch__option--expense" for="type-expense">Расход</label>
+              <input class="switch__input" type="radio" name="type" id="type-income" value="income">
+              <label class="switch__option switch__option--income" for="type-income">Доход</label>
+            </div>
+          </fieldset>
+
+          <div class="field">
+            <label class="field__label" for="amount">Сумма, ₽</label>
+            <input class="field__input field__input--amount" id="amount" name="amount" type="text"
+                   inputmode="decimal" autocomplete="off" placeholder="0,00" aria-describedby="amount-error">
+            <p class="field__error" id="amount-error"></p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="category">Категория</label>
+            <select class="field__input field__select" id="category" name="categoryId" aria-describedby="categoryId-error">
+              <option value="">Загрузка…</option>
+            </select>
+            <p class="field__error" id="categoryId-error"></p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="date">Дата</label>
+            <input class="field__input" id="date" name="date" type="date" aria-describedby="date-error">
+            <p class="field__error" id="date-error"></p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="comment">Комментарий <span class="field__optional">— необязательно</span></label>
+            <input class="field__input" id="comment" name="comment" type="text" maxlength="200"
+                   autocomplete="off" placeholder="Например, обед с коллегами" aria-describedby="comment-error">
+            <p class="field__error" id="comment-error"></p>
+          </div>
+
+          <div class="form__actions">
+            <button class="button button--primary" id="submit-button" type="submit">Добавить операцию</button>
+            <button class="button button--ghost" id="cancel-button" type="button" hidden>Отмена</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Список операций -->
+      <section class="panel panel--list" aria-labelledby="list-title">
+        <div class="list__head">
+          <h2 class="panel__title" id="list-title">Операции</h2>
+          <p class="list__count" id="list-count"></p>
+        </div>
+
+        <div class="list__status" id="list-status" aria-live="polite"></div>
+
+        <div class="ops-wrap">
+        <table class="ops" id="ops-table" hidden>
+          <thead>
+            <tr>
+              <th scope="col">Дата</th>
+              <th scope="col">Категория</th>
+              <th scope="col">Комментарий</th>
+              <th scope="col" class="ops__amount-head">Сумма</th>
+              <th scope="col"><span class="visually-hidden">Действия</span></th>
+            </tr>
+          </thead>
+          <tbody id="ops-body"></tbody>
+        </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Короткие уведомления: «Операция добавлена», ошибки сохранения и удаления -->
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+</body>
+</html>
